@@ -17,6 +17,7 @@ resource "google_compute_instance" "instance-1" {
     network    = google_compute_network.default.id
     subnetwork = google_compute_subnetwork.us-central1.id
     access_config {
+      network_tier = "STANDARD"
     }
   }
 
@@ -26,4 +27,13 @@ resource "google_compute_instance" "instance-1" {
     email  = google_service_account.instance-1.email
     scopes = ["cloud-platform"]
   }
+
+  metadata = {
+    enable-oslogin = "TRUE"
+  }
+}
+
+resource "google_os_login_ssh_public_key" "google" {
+  user = "google@fajarmaftuhfadli.com"
+  key  = file("~/.ssh/ansible.pub")
 }
