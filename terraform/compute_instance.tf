@@ -27,13 +27,11 @@ resource "google_compute_instance" "instance-1" {
     email  = google_service_account.instance-1.email
     scopes = ["cloud-platform"]
   }
-
-  metadata = {
-    enable-oslogin = "TRUE"
-  }
 }
 
-resource "google_os_login_ssh_public_key" "google" {
-  user = "google@fajarmaftuhfadli.com"
-  key  = file("~/.ssh/ansible.pub")
+resource "google_compute_project_metadata" "ssh_keys" {
+  project = google_project.main_project.project_id
+  metadata = {
+    ssh-keys = "ansible:${file("~/.ssh/ansible.pub")}"
+  }
 }

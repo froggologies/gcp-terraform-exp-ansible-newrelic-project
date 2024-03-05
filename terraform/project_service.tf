@@ -1,6 +1,6 @@
 locals {
   services = [
-    "compute.googleapis.com"
+    "compute.googleapis.com",
   ]
 }
 

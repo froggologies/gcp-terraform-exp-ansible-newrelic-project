@@ -1,6 +1,6 @@
 locals {
   restore_policies = [
-    "compute.vmExternalIpAccess"
+    "compute.vmExternalIpAccess",
   ]
 }
 
