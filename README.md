@@ -6,6 +6,9 @@
     - Folder
     - Billing Account
     - Cloud Storage (optional, to save terraform state)
+- New Relic
+    - API key
+    - Account ID
 
 ## Prerequisite
 
@@ -20,15 +23,16 @@ cd gcp-terraform-exp-ansible-newrelic-project
 
 ## Terraform
 
-This terraform will create the following:
+This terraform section will create the following:
 - Project
 - Enable services
 - Restore policy
 - VPC
 - Subnet (us-central1)
 - Firewall
-- GCE instance
 - Service account
+- GCE instance
+- Metadata
 
 1. Create environment variables
 
@@ -43,13 +47,29 @@ If using service account
 export GOOGLE_APPLICATION_CREDENTIALS=<sa-key-json-file>
 ```
 
-2. Initializes terraform
+2. Change the backend location
+
+In the terraform/backend.tf, change the bucket name to your bucket name.
+
+`bucket = "<bucket-name>"`
+
+> You could also remove the entire code in backend.tf if you want to save terraform state in the local machine.
+
+3. Change the ssh public key path in terraform/compute_instance.tf in `ssh-keys = "ansible:${file("<ssh-public-key-path>")}"` to your public ssh key.
+
+Here is how to generate ssh key pair if you don't have it yet:
+
+```sh
+ssh-keygen -t rsa -f ~/.ssh/ansible -C ansible -b 2048
+```
+
+4. Initializes terraform
 
 ```sh
 terraform -chdir=terraform init
 ```
 
-3. Apply terraform
+5. Apply terraform
 
 ```sh
 terraform -chdir=terraform apply -auto-approve
@@ -57,7 +77,7 @@ terraform -chdir=terraform apply -auto-approve
 
 > Your account might not have the requisite permissions for accessing all necessary features. Adjust permissions accordingly.
 
-4. Get the GCE instance external IP
+6. Get the GCE instance external IP
 
 ```sh
 terraform -chdir=terraform output
@@ -69,3 +89,45 @@ terraform -chdir=terraform output
 Copy the IP address.
 
 ## Ansible
+
+This Ansible section will do the following:
+- Install nginx
+- Enable stub status nginx module
+- Install newrelic infrastucture agent
+- Install newrelic logs agent
+- Install newrelic nginx integration
+
+1. Change to the ansible dir
+
+```sh
+cd ansible
+```
+
+2. Paste the previous IP address to inventory.yaml in here `ansible_host: <host-ip>`
+
+3. Configure the ansible.cfg
+
+```
+private_key_file= <ssh-private-key-path>
+remote_user = <username>
+```
+
+4. Configure New Relic environment variables in install_new_relic.yaml
+
+```yaml
+NEW_RELIC_API_KEY: <nr-api-key>
+NEW_RELIC_ACCOUNT_ID: <nr-account-id>
+NEW_RELIC_REGION: <region-ex:US/EU>
+```
+
+5. Install nginx
+
+```sh
+ansible-playbook -i inventory.yaml install_nginx.yaml
+```
+
+6. Install New Relic Integration
+
+```sh
+ansible-playbook -i inventory.yaml install_new_relic.yaml
+```
