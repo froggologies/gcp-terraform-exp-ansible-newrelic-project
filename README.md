@@ -6,7 +6,7 @@
     - Folder
     - Billing Account
     - Cloud Storage (optional, to save terraform state)
-- New Relic
+- New Relic:
     - API key
     - Account ID
 
@@ -93,9 +93,10 @@ Copy the IP address.
 This Ansible section will do the following:
 - Install nginx
 - Enable stub status nginx module
-- Install newrelic infrastucture agent
-- Install newrelic logs agent
-- Install newrelic nginx integration
+- Install New Relic Integration:
+    - infrastucture
+    - logs
+    - nginx
 
 1. Change to the ansible dir
 
