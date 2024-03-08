@@ -1,0 +1,35 @@
+---
+- name: Install Nginx
+  hosts: gcp
+  become: true
+
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Enable stub status module
+      ansible.builtin.copy:
+        dest: /etc/nginx/conf.d/stub_status.conf
+        content: |
+          server {
+              listen 127.0.0.1;
+              server_name localhost;
+              location /nginx_status {
+                  stub_status on;
+                  access_log off;
+                  allow 127.0.0.1;
+                  deny all;
+              }
+          }
+        mode: '0644'
+
+    - name: Reload Nginx to apply changes
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded

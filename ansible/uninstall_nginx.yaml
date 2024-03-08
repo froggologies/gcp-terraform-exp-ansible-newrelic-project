@@ -1,0 +1,10 @@
+---
+- name: Uninstall Nginx
+  hosts: gcp
+  become: true
+
+  tasks:
+    - name: Remove Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: absent

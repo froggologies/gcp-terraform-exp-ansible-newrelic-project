@@ -1,4 +1,6 @@
 resource "google_compute_instance" "instance-1" {
+  depends_on = [google_project_service.services.0]
+
   project = google_project.main_project.project_id
   name    = "instance-1-${random_id.instance-1.hex}"
 
@@ -30,7 +32,8 @@ resource "google_compute_instance" "instance-1" {
 }
 
 resource "google_compute_project_metadata" "ssh_keys" {
-  project = google_project.main_project.project_id
+  depends_on = [google_project_service.services.0, google_project_organization_policy.restore_policies.1]
+  project    = google_project.main_project.project_id
   metadata = {
     ssh-keys = "ansible:${file("~/.ssh/ansible.pub")}"
   }

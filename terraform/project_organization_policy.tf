@@ -1,6 +1,7 @@
 locals {
   restore_policies = [
     "compute.vmExternalIpAccess",
+    "compute.requireOsLogin"
   ]
 }
 

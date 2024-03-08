@@ -1,4 +1,4 @@
 gcp:
   hosts:
     instance-1:
-      ansible_host:
+      ansible_host: <host-ip>
