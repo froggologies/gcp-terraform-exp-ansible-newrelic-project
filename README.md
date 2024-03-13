@@ -1,5 +1,9 @@
 # GCP - Terraform - Ansible - New Relic - Nginx
 
+## TODO
+- Update documentation about New Relic deployment on GKE
+- Tidy up ansible files
+
 ## Requirement
 
 - Google Cloud Platform:
@@ -12,8 +16,21 @@
 
 ## Prerequisite
 
-1. Install Terraform
-2. Install Ansible
+1. Install [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+2. Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+
+Install newrelic ansible-galaxy
+
+```sh
+ansible-galaxy install newrelic.newrelic_install
+```
+
+Make sure you have ansible.windows and ansible.utils if they are not already installed:
+
+```sh
+ansible-galaxy collection install ansible.windows ansible.utils
+```
+
 3. Clone this repo
 
 ```sh
